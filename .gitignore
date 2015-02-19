@@ -1,0 +1,8 @@
+/bin/
+/*.jar
+/output.txt
+/output_*.txt
+/charts.xlsx
+/manifest.txt
+/dataformat.txt
+/~supplychain_todo.txt
