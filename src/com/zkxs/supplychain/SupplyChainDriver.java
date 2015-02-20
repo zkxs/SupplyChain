@@ -27,23 +27,23 @@ public class SupplyChainDriver
 {	
 	public static final double COST = 1.0;                  // DEFAULT: 1
 	private static final double MEAN_TIME_MINIMUM = 10;     // DEFAULT: 10
-	private static final double MEAN_TIME_INCREMENT = 0.25;   // DEFAULT: 10
+	private static final double MEAN_TIME_INCREMENT = 10;   // DEFAULT: 10
 	
 	/**
 	 * The superlinearity of the arms. A factor of 1 is linear. Greater than
 	 * 1 is superlinear. (3 works well). Less than 1 and greater than 0 is sublinear.
 	 * (1/3) works well.
 	 */
-	private static final double SUPER_FACTOR = 1. / 3.;      // DEFAULT: 3
+	private static final double SUPER_FACTOR = 1;      // DEFAULT: 3
 	
 	/** The number of children the root node has */
-	private static final int ROOT_CHILDREN = 20;             // DEFAULT: 10
+	private static final int ROOT_CHILDREN = 10;             // DEFAULT: 10
 	
 	/** The number of children the non-root nodes have */
-	private static final int NONROOT_CHILDREN = 5;          // DEFAULT: 10
+	private static final int NONROOT_CHILDREN = 10;          // DEFAULT: 10
 	
 	/** Tree height including root node */
-	private static final int TREE_DEPTH = 2;                // DEFAULT: 4
+	private static final int TREE_DEPTH = 4;                // DEFAULT: 4
 	
 	/** If <code>true</code>, always use the child algorithm for child nodes */
 	private static boolean fallbackOverride = false;
@@ -52,14 +52,14 @@ public class SupplyChainDriver
 	
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException
 	{
-		String fileLabel = "TEST";
+//		String fileLabel = "TEST";
 //		String fileLabel = "~new_budget50-500_stddev20_branch10-10_terraced";
-//		String fileLabel = "~new_stddev1-50_budget200_branch10-5_linear";
+		String fileLabel = "2015feb_stddev1-50_budget200_branch10-10_linear";
 		
 		//FIXME: parameters
 		
 		// Parameters
-		final int trials = 500;
+		final int trials = 1000;
 		double budget = 200;			// CHANGEME
 		double scale = 10; 	// CHANGEME
 //		final RealDistribution distribution = new BetaDistribution(0.5, 0.5); // lucas distribution
@@ -103,6 +103,9 @@ public class SupplyChainDriver
 		
 		final String[] dynamicAlgorithmNames = {"soaav", "l-split", "(random)", "(arbitrary)",
 				"PEEF (.25)", "E-First (.25)", "KDE (.25)", "greedy", "UCB-BV1"};
+		
+		
+		// static algorithms currently unused
 		
 		final Algorithm[] staticAlgorithms = {
 				new AlgorithmPEEF(ROOT_CHILDREN, budget, 0.25),
