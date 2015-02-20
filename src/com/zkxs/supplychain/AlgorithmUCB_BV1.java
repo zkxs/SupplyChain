@@ -37,7 +37,7 @@ public class AlgorithmUCB_BV1 implements Algorithm
 				
 				// this term is used twice, so I save it
 				double term = Math.sqrt(Math.log(time - 1) / pulls);
-				double armIndex = averageReward + (1 + term) / (1 - term);
+				double armIndex = averageReward + (2 * term) / (1 - term);
 				armIndexes[i] = armIndex;
 			}
 			
