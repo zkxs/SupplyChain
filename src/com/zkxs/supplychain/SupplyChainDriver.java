@@ -40,7 +40,7 @@ public class SupplyChainDriver
 	private static final int ROOT_CHILDREN = 10;             // DEFAULT: 10
 	
 	/** The number of children the non-root nodes have */
-	private static final int NONROOT_CHILDREN = 5;          // DEFAULT: 10
+	private static final int NONROOT_CHILDREN = 10;          // DEFAULT: 10
 	
 	/** Tree height including root node */
 	private static final int TREE_DEPTH = 4;                // DEFAULT: 4
@@ -53,15 +53,15 @@ public class SupplyChainDriver
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException
 	{
 //		String fileLabel = "TEST";
-//		String fileLabel = "2015feb_budget50-500_stddev10_branch10-10_linear";
-		String fileLabel = "2015feb_stddev1-50_budget200_branch10-5_linear";
+		String fileLabel = "2015feb_budget50-500_stddev20_branch10-10_terraced";
+//		String fileLabel = "2015feb_stddev1-50_budget200_branch10-5_linear";
 		
 		//FIXME: parameters
 		
 		// Parameters
 		final int trials = 1000;
 		double budget = 200;			// CHANGEME
-		double scale = 10; 	// CHANGEME
+		double scale = 20; 	// CHANGEME
 //		final RealDistribution distribution = new BetaDistribution(0.5, 0.5); // lucas distribution
 		final RealDistribution distribution = new NormalDistribution(); // normal distribution
 //		final RealDistribution distribution = new UniformRealDistribution(); // square distribution
@@ -120,16 +120,16 @@ public class SupplyChainDriver
 		//		RandomProvider.rand.setSeed("deja vu".hashCode()); // static seed for testing		
 		
 		// linear
-		AgentSupplier root = (AgentSupplier) constructTree(TREE_DEPTH, ROOT_CHILDREN, 0, dynamicAlgorithms[0], true,
-				distribution, scale);
+//		AgentSupplier root = (AgentSupplier) constructTree(TREE_DEPTH, ROOT_CHILDREN, 0, dynamicAlgorithms[0], true,
+//				distribution, scale);
 		
 		// superlinear
 //		AgentSupplier root = (AgentSupplier) constructTreeSuper(TREE_DEPTH, ROOT_CHILDREN, 0.0,
 //				dynamicAlgorithms[0], true, distribution, scale);
 		
 //		 terraced
-//		AgentSupplier root = (AgentSupplier) constructTreeTerraced(TREE_DEPTH, ROOT_CHILDREN, 0.0,
-//				dynamicAlgorithms[0], true, standardDeviation, standardDeviation);
+		AgentSupplier root = (AgentSupplier) constructTreeTerraced(TREE_DEPTH, ROOT_CHILDREN, 0.0,
+				dynamicAlgorithms[0], true, distribution, scale, scale);
 		
 		// show level 2 of the tree
 //		Util.printIterable(root.getChildren());
@@ -138,14 +138,14 @@ public class SupplyChainDriver
 		// begin big for loop that runs the 1000 trials each time
 		boolean firstLoop = true;
 		//FIXME: independant variable
-		for (scale = 1; scale <= 50.7; scale += 1.6)
-		{
-			fileDynamic.print(scale);
-			fileStatic.print(scale);
-//		for (budget = 50; budget <= 521; budget += 22)
+//		for (scale = 1; scale <= 50.7; scale += 1.6)
 //		{
-//			fileDynamic.print(budget);
-//			fileStatic.print(budget);
+//			fileDynamic.print(scale);
+//			fileStatic.print(scale);
+		for (budget = 50; budget <= 521; budget += 22)
+		{
+			fileDynamic.print(budget);
+			fileStatic.print(budget);
 			
 			
 			// print trial information:
@@ -192,7 +192,7 @@ public class SupplyChainDriver
 				}
 			}
 			
-			/*
+			
 			System.out.println("Begin homogenous trial:");
 			// homogeneous trial (all nodes using the same algorithm)
 			fallbackOverride = false;
@@ -233,8 +233,8 @@ public class SupplyChainDriver
 			} // end homogeneous trial
 			
 			System.out.println();
-			*/
 			
+			/*
 			System.out.println("Begin static w/ fallback trial:");
 			
 			// dynamic algorithms with fallback (children use a dynamic algorithm)
@@ -268,6 +268,8 @@ public class SupplyChainDriver
 				fileStatic.print("\t" + (timeTaken / trials));
 				System.out.printf("    Average time taken: %.2f\n", timeTaken / trials);
 			} // end dynamic algorithms with fallback
+			*/
+			
 			
 			/*
 			// static algorithms with fallback (children use a dynamic algorithm)
@@ -326,7 +328,8 @@ public class SupplyChainDriver
 	 * @param meanIncrementMultiplier amount to increment child average by
 	 * @param algorithm The algorithm to use in this tree
 	 * @param isRoot Should always be <code>true</code>. Tells the recursive function
-	 * @param standardDeviation The standard deviation all arms in this tree are to have
+	 * @param distribution Distribution to pull samples from
+	 * @param scale The standard deviation all arms in this tree are to have
 	 * that this call was the initial call.
 	 * @return The root node of the new tree
 	 */
@@ -377,7 +380,8 @@ public class SupplyChainDriver
 	 * @param meanTime mean time this root node will take to pull
 	 * @param algorithm The algorithm to use in this tree
 	 * @param isRoot Should always be <code>true</code>. Tells the recursive function
-	 * @param standardDeviation The standard deviation all arms in this tree are to have
+	 * @param distribution Distribution to pull samples from
+	 * @param scale The standard deviation all arms in this tree are to have
 	 * that this call was the initial call.
 	 * @return The root node of the new tree
 	 */
@@ -431,18 +435,18 @@ public class SupplyChainDriver
 	 * @param numChildren number of children this layer should have
 	 * @param meanTime mean time this root node will take to pull
 	 * @param algorithm The algorithm to use in this tree
-	 * @param isRoot Should always be <code>true</code>. Tells the recursive function
-	 * @param baseStandardDeviation The standard deviation all arms in this tree are to have
-	 * that this call was the initial call.
-	 * @param standardDeviation The standard deviation this node will have
+	 * @param isRoot Should always be <code>true</code>. Tells the recursive function that this call was the initial call.
+	 * @param distribution Distribution to pull samples from
+	 * @param baseScale The standard deviation all arms in this tree are to have
+	 * @param scale The standard deviation this node will have
 	 * @return The root node of the new tree
 	 */
-	/*public static Supplier constructTreeTerraced(int treeSize, int numChildren, double meanTime,
-			Algorithm algorithm, boolean isRoot, double baseStandardDeviation, double standardDeviation)
+	public static Supplier constructTreeTerraced(int treeSize, int numChildren, double meanTime,
+			Algorithm algorithm, boolean isRoot, RealDistribution distribution, double baseScale, double scale)
 	{
 		if (treeSize == 1) // base case, leaf node
 		{
-			return new SimpleSupplier(COST, meanTime, standardDeviation);
+			return new SimpleSupplier(COST, meanTime, distribution, scale);
 		}
 		else
 		{
@@ -460,18 +464,18 @@ public class SupplyChainDriver
 				else if (i < (numChildren + 1) / 2)
 				{	// 1st terrace (good)
 					newMeanTime = MEAN_TIME_MINIMUM + MEAN_TIME_INCREMENT * 0.5;
-					newStandardDeviation = baseStandardDeviation;
+					newStandardDeviation = baseScale;
 				}
 				else
 				{	// 2nd terrace (worst)
 					newMeanTime = MEAN_TIME_MINIMUM + MEAN_TIME_INCREMENT * 1.5;
-					newStandardDeviation = baseStandardDeviation;
+					newStandardDeviation = baseScale;
 				}
 				
 				Supplier child = constructTreeTerraced(treeSize - 1, NONROOT_CHILDREN, newMeanTime,
 						//(algorithm.requiresInitialBudget() || fallbackOverride) ?
 						(fallbackOverride) ?
-						fallbackAlgorithm : algorithm, false, baseStandardDeviation, newStandardDeviation);
+						fallbackAlgorithm : algorithm, false, distribution, baseScale, newStandardDeviation);
 				
 				if (i == 0) child.setBestArm(true);
 				childrenOrdered.add(child);
@@ -489,10 +493,10 @@ public class SupplyChainDriver
 			 * Create and return root node.
 			 * Note that the budgetMultiplier does not affect the root node as it is taken into
 			 * account in the supply() method, which is never called on the root node.
-			 * /
-			return new AgentSupplier(algorithm.duplicate(), childrenScrambled, COST, meanTime, standardDeviation, numChildren, isRoot);
+			 */
+			return new AgentSupplier(algorithm.duplicate(), childrenScrambled, COST, meanTime, distribution, scale, numChildren, isRoot);
 		}
-	}*/
+	}
 
 	/**
 	 * Reset all of the agents in this tree so that it can be used in another run
