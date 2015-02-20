@@ -96,12 +96,13 @@ public class SupplyChainDriver
 				new AlgorithmPEEF(ROOT_CHILDREN, budget, 0.25),
 				new AlgorithmEpsilonFirst(budget, 0.25),
 				new AlgorithmKDE(budget, 0.25),
-				new AlgorithmGreedy()
+				new AlgorithmGreedy(),
+				new AlgorithmUCB_BV1()
 				//new AlgorithmConfidenceBiasedGreedy(20) // was 5
 		};
 		
 		final String[] dynamicAlgorithmNames = {"soaav", "l-split", "(random)", "(arbitrary)",
-				"PEEF (.25)", "E-First (.25)", "KDE (.25)", "greedy", "greedy+"};
+				"PEEF (.25)", "E-First (.25)", "KDE (.25)", "greedy", "UCB-BV1"};
 		
 		final Algorithm[] staticAlgorithms = {
 				new AlgorithmPEEF(ROOT_CHILDREN, budget, 0.25),
