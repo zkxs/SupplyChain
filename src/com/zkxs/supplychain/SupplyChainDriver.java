@@ -27,20 +27,20 @@ public class SupplyChainDriver
 {	
 	public static final double COST = 1.0;                  // DEFAULT: 1
 	private static final double MEAN_TIME_MINIMUM = 10;     // DEFAULT: 10
-	private static final double MEAN_TIME_INCREMENT = 5;   // DEFAULT: 10
+	private static final double MEAN_TIME_INCREMENT = 10;   // DEFAULT: 10
 	
 	/**
 	 * The superlinearity of the arms. A factor of 1 is linear. Greater than
 	 * 1 is superlinear. (3 works well). Less than 1 and greater than 0 is sublinear.
 	 * (1/3) works well.
 	 */
-	private static final double SUPER_FACTOR = 3.;      // DEFAULT: 3
+	private static final double SUPER_FACTOR = 1.;      // DEFAULT: 3
 	
 	/** The number of children the root node has */
 	private static final int ROOT_CHILDREN = 10;             // DEFAULT: 10
 	
 	/** The number of children the non-root nodes have */
-	private static final int NONROOT_CHILDREN = 10;          // DEFAULT: 10
+	private static final int NONROOT_CHILDREN = 5;          // DEFAULT: 10
 	
 	/** Tree height including root node */
 	private static final int TREE_DEPTH = 4;                // DEFAULT: 4
@@ -53,15 +53,15 @@ public class SupplyChainDriver
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException
 	{
 //		String fileLabel = "TEST";
-		String fileLabel = "2015feb_budget50-500_stddev20_branch10-10_superlinear";
-//		String fileLabel = "2015feb_stddev1-50_budget200_branch10-5_linear";
+//		String fileLabel = "2015feb_budget50-500_stddev10_branch10-10_linear";
+		String fileLabel = "2015feb_stddev1-50_budget200_branch10-5_linear";
 		
 		//FIXME: parameters
 		
 		// Parameters
 		final int trials = 1000;
 		double budget = 200;			// CHANGEME
-		double scale = 20; 	// CHANGEME
+		double scale = 10; 	// CHANGEME
 //		final RealDistribution distribution = new BetaDistribution(0.5, 0.5); // lucas distribution
 		final RealDistribution distribution = new NormalDistribution(); // normal distribution
 //		final RealDistribution distribution = new UniformRealDistribution(); // square distribution
@@ -120,12 +120,12 @@ public class SupplyChainDriver
 		//		RandomProvider.rand.setSeed("deja vu".hashCode()); // static seed for testing		
 		
 		// linear
-//		AgentSupplier root = (AgentSupplier) constructTree(TREE_DEPTH, ROOT_CHILDREN, 0, dynamicAlgorithms[0], true,
-//				distribution, scale);
+		AgentSupplier root = (AgentSupplier) constructTree(TREE_DEPTH, ROOT_CHILDREN, 0, dynamicAlgorithms[0], true,
+				distribution, scale);
 		
 		// superlinear
-		AgentSupplier root = (AgentSupplier) constructTreeSuper(TREE_DEPTH, ROOT_CHILDREN, 0.0,
-				dynamicAlgorithms[0], true, distribution, scale);
+//		AgentSupplier root = (AgentSupplier) constructTreeSuper(TREE_DEPTH, ROOT_CHILDREN, 0.0,
+//				dynamicAlgorithms[0], true, distribution, scale);
 		
 //		 terraced
 //		AgentSupplier root = (AgentSupplier) constructTreeTerraced(TREE_DEPTH, ROOT_CHILDREN, 0.0,
@@ -138,14 +138,14 @@ public class SupplyChainDriver
 		// begin big for loop that runs the 1000 trials each time
 		boolean firstLoop = true;
 		//FIXME: independant variable
-//		for (scale = 1; scale <= 50.7; scale += 1.6)
-//		{
-//			fileDynamic.print(scale);
-//			fileStatic.print(scale);
-		for (budget = 50; budget <= 521; budget += 22)
+		for (scale = 1; scale <= 50.7; scale += 1.6)
 		{
-			fileDynamic.print(budget);
-			fileStatic.print(budget);
+			fileDynamic.print(scale);
+			fileStatic.print(scale);
+//		for (budget = 50; budget <= 521; budget += 22)
+//		{
+//			fileDynamic.print(budget);
+//			fileStatic.print(budget);
 			
 			
 			// print trial information:
